@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Valuation } from 'src/valuations/valuations.entity';
+import { Valuation } from '../valuations/valuations.entity';
 import { LoanApplication } from '../loans/loans.entity';
 
 @Entity()

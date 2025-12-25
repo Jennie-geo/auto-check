@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { LoanApplication } from 'src/loans/loans.entity';
+import { LoanApplication } from '../loans/loans.entity';
 
 @Entity()
 export class User {
