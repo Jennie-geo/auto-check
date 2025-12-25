@@ -83,3 +83,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Security Note
+For simplicity, authentication and role-based access control were omitted.
+In a production system, loan status updates would be restricted to authorized admin users.
