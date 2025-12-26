@@ -3,8 +3,6 @@ import { Vehicle } from './src/vehicles/vehicles.entity';
 import { Valuation } from './src/valuations/valuations.entity';
 import { LoanApplication } from './src/loans/loans.entity';
 import { User } from './src/users/users.entity';
-// to seed this data => npx ts-node seed.ts
-// to reset test.db => rm test.db
 const dataSource = new DataSource({
   type: 'sqlite',
   database: 'test.db',
