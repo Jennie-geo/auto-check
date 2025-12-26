@@ -1,0 +1,33 @@
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { isNil } from 'lodash';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.get<string[]>(
+      'roles',
+      context.getHandler(),
+    );
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    console.log('llllll', request.user);
+    const user = request.user;
+    console.log('::::::', user);
+    if (isNil(user) || isNil(requiredRoles.includes(user.role))) {
+      throw new ForbiddenException('Forbidden resource');
+    }
+
+    return true;
+  }
+}

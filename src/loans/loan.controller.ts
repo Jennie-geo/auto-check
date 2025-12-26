@@ -1,7 +1,9 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { LoanService } from './loan.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from './roles.guard';
+import { Roles } from './roles.decorator';
 
 @Controller('loan')
 @UseGuards(JwtAuthGuard)
@@ -17,6 +19,17 @@ export class LoanController {
     return {
       message: 'Loan application submitted successfully',
       data: loan,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @Get()
+  async getAllLoans() {
+    const loans = await this.loanService.retrieveLoans();
+    return {
+      message: 'All loan applications',
+      data: loans,
     };
   }
 }

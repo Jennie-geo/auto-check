@@ -33,7 +33,7 @@ export class LoanApplication {
   @Column({ default: false })
   eligible: boolean;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true }) //after admin rejection
   rejectionReason?: string;
 
   @ManyToOne(() => User, (user) => user.loanApplications)

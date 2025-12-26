@@ -31,12 +31,12 @@ export class AuthService {
     if (isNil(isPasswordValid))
       throw new BadRequestException('Invalid credentials');
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role: user.role };
     const token = this.jwtService.sign(payload);
 
     return {
       access_token: token,
-      user: { id: user.id, email: user.email },
+      user: { id: user.id, email: user.email, role: payload.role },
     };
   }
 }
