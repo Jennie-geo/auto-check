@@ -9,7 +9,6 @@ import {
 import { Vehicle } from '../vehicles/vehicles.entity';
 import { Valuation } from '../valuations/valuations.entity';
 import { LoanStatus } from '../../enums/status';
-// ÷ 'enums/status';
 import { User } from '../users/users.entity';
 @Entity()
 export class LoanApplication {
