@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { isEmpty, isNil } from 'lodash';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +10,7 @@ import { LoanApplication } from './loans.entity';
 import { Repository } from 'typeorm';
 import { Vehicle } from 'src/vehicles/vehicles.entity';
 import { LoanStatus } from 'enums/status';
+import { Valuation } from '../valuations/valuations.entity';
 @Injectable()
 export class LoanService {
   constructor(
@@ -14,27 +19,53 @@ export class LoanService {
 
     @InjectRepository(Vehicle)
     private readonly vehicleRepo: Repository<Vehicle>,
+
+    @InjectRepository(Vehicle)
+    private readonly valuationRepo: Repository<Valuation>,
   ) {}
+  private checkEligibility(
+    requestedAmount: number,
+    tradeInValue: number,
+  ): boolean {
+    return requestedAmount <= tradeInValue * 0.8;
+  }
   async createLoan(userId: number, dto: CreateLoanDto) {
-    // Fetch vehicle with valuations
     const vehicle = await this.vehicleRepo.findOne({
       where: { id: dto.vehicleId },
-      relations: ['valuations'],
-      order: { createdAt: 'DESC' },
+      relations: ['valuations'], // include valuations
     });
+    if (isNil(vehicle)) {
+      throw new NotFoundException('Vehicle not found');
+    }
 
-    if (isNil(vehicle)) throw new NotFoundException('Vehicle not found');
+    if (dto.requestedAmount <= 0) {
+      throw new BadRequestException('Requested amount must be greater than 0');
+    }
+    // will get latest valuation saved on db
+    const latestValuation = vehicle.valuations?.length
+      ? vehicle.valuations[vehicle.valuations.length - 1]
+      : await this.valuationRepo.findOne({
+          where: { vehicle: { id: vehicle.id } },
+          order: { createdAt: 'DESC' },
+        });
 
-    // Use latest valuation for loan, because valuation changes over time and a vehicle can have multiple valuation
-    const latestValuation = vehicle.valuations[vehicle.valuations.length - 1];
-    const amountRequested = latestValuation.estimatedValue * 0.8;
+    if (!latestValuation) {
+      throw new BadRequestException('No valuation found for this vehicle');
+    }
+
+    // Check eligibility
+    const eligible = this.checkEligibility(
+      dto.requestedAmount,
+      latestValuation.tradeInValue,
+    );
 
     const loan = this.loanRepo.create({
+      vehicle,
+      valuation: latestValuation,
       user: { id: userId },
-      vehicle: { id: vehicle.id },
-      requestedAmount: amountRequested,
+      requestedAmount: dto.requestedAmount,
+      eligible,
       status: LoanStatus.PENDING,
-      eligible: false,
     });
 
     return this.loanRepo.save(loan);

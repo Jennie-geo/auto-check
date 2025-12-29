@@ -17,16 +17,16 @@ export class Vehicle {
   @Column({ unique: true })
   vin: string;
 
-  @Column()
+  @Column({ nullable: true })
   make: string;
 
-  @Column()
+  @Column({ nullable: true })
   model: string;
 
-  @Column()
+  @Column({ nullable: true })
   year: number;
 
-  @Column()
+  @Column({ nullable: true })
   mileage: number; // total kilometers or miles the car has driven
 
   @OneToMany(() => Valuation, (valuation) => valuation.vehicle)

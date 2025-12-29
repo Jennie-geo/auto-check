@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -27,10 +19,10 @@ export class VehiclesController {
     };
   }
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async getVehicle(@Param('id', ParseIntPipe) id: number) {
+  @Get(':vin')
+  async getVehicle(@Param('vin') vin: string) {
     return {
-      data: await this.vehiclesService.getVehicleValuation(id),
+      data: await this.vehiclesService.getVehicleValuation(vin),
     };
   }
 }
