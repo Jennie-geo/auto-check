@@ -47,7 +47,7 @@ npm run start:dev
 - Protected routes using guards
 
 ## Vehicles & Valuations
-- Vehicles are created or seeded using VIN
+- Vehicles are seeded using VIN (Test VIN Data => "vin": "5FRYD4H66GB592800")
 - Valuations are retrieved dynamically from RapidAPI
 - Retrieved valuation data is saved in the database
 
