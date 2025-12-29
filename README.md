@@ -1,4 +1,4 @@
-# auto-check
+# Auto-check
 vehicle Valuation & Financing Service (Backend API)
 
 ## Purpose
@@ -29,37 +29,35 @@ This project simulates a real-world vehicle-backed loan system similar to what i
 - Bcrypt (password hashing)
 - RapidAPI (VIN Lookup / Valuation)
 
-# install dependencies
+## Install dependencies
 npm install
 
-#  Seeding Data
-  A seed script is included to populate:
+##  Seeding Data command
 - npx ts-node seed.ts
 
 - Vehicles
-- Valuations
 
-# start the server
+## start the server
 npm run start:dev
 
-# Authentication & Authorization
+## Authentication & Authorization
 - User signup and login
 - JWT-based authentication
 - Role-based access control (user, admin)
 - Protected routes using guards
 
-# Vehicles & Valuations
+## Vehicles & Valuations
 - Vehicles are created or seeded using VIN
 - Valuations are retrieved dynamically from RapidAPI
 - Retrieved valuation data is saved in the database
 
 A vehicle can have multiple valuation records over time, but last one is retrieve during valuation
 
-# Access rules:
+## Access rules:
 Public access to list vehicles
 Authenticated users can request vehicle valuation when retrieving single vehicle
 
-# Users can apply for loans using vehicle valuations
+## Users can apply for loans using vehicle valuations
 - Users apply for cash loans backed by vehicle value
 - Users submit a requestedAmount
 - Loan eligibility is determined using the latest vehicle valuation
